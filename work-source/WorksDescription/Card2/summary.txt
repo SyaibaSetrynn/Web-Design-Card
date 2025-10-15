@@ -1,0 +1,2 @@
+title="My Dearest Linux"
+text="A pure word game. You perform as a Linux student submitting the final assignment, but the Linux machine is running out of control..."

@@ -1,0 +1,2 @@
+title="Kamikiu Mura"
+text="My first game. For testing, you need to make sure the wrapping works and words do not exceed card boundary. To test the text is going to be long."

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Setrynn's Universe</title>
+    <link rel="icon" type="image/png" href="work-source/webicon.png">
+    <link rel="shortcut icon" type="image/png" href="work-source/webicon.png">
     <style>
         * {
             margin: 0;
@@ -13,9 +15,19 @@
         }
 
         body {
-            height: 300vh; /* 增加页面高度以便测试滚动 */
+            height: auto;
             overflow-x: hidden;
-            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        html {
+            height: auto;
+            overflow-y: auto;
+        }
+
+        #page {
+            width: 1536px;
+            transform-origin: top left;
         }
 
         .content {
@@ -30,6 +42,13 @@
             text-align: center;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
             box-sizing: border-box;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100%;
+            height: auto;
+            min-height: 100vh;
         }
 
         html {
@@ -47,7 +66,7 @@
 
         .background-image {
             width: 100%;
-            height: 200%; /* 背景图片高度设为200%，确保有足够的滚动空间 */
+            height: 100%; /* 背景图片高度设为100%，会在JavaScript中动态调整 */
             background-image: url('The_Background.png');
             background-size: cover;
             background-position: center top;
@@ -58,6 +77,7 @@
         :root {
             --primary-blue: #040570;
             --primary-white: #FFFFFF;
+            --dark-blue: #0A083B;
             
             /* 动画时间轴 */
             --animation-delay-title: 0s;
@@ -265,7 +285,7 @@
 
         .capsule {
             position: absolute;
-            background-color: rgba(4, 5, 112, 0.8);
+            background-color: rgba(4, 5, 112, 0.5);
             color: var(--primary-white);
             border: 3px solid var(--primary-white);
             border-radius: 25px;
@@ -422,18 +442,49 @@
             top: 500px;
             width: 3px;
             height: 0px;
-            background-color: var(--primary-white);
+            background: linear-gradient(to bottom,
+                transparent 0px,
+                var(--primary-white) 50px,
+                var(--primary-white) 220px);
             transform: translateX(-50%);
             animation: drawLine var(--animation-duration-line) ease-out var(--animation-delay-line) forwards;
         }
 
         .center-divider {
             position: absolute;
-            top: 1000px;
+            top: 900px;
             left: 50%;
-            width: 1px;
-            height: 400px;
-            background-color: var(--primary-white);
+            width: 2px;
+            height: 500px;
+            background: linear-gradient(to bottom,
+                transparent 0px,
+                var(--primary-white) 100px,
+                var(--primary-white) 400px,
+                transparent 500px);
+            transform: translateX(-50%);
+        }
+
+        .horizontal-divider {
+            position: absolute;
+            top: 1500px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right,
+                transparent 0%,
+                var(--primary-white) 12.5%,
+                var(--primary-white) 87.5%,
+                transparent 100%);
+        }
+
+        .my-works-title {
+            position: absolute;
+            top: 1540px;
+            left: 50%;
+            font-size: 80px;
+            font-weight: bold;
+            color: var(--primary-white);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
             transform: translateX(-50%);
         }
 
@@ -513,7 +564,7 @@
         }
 
         .mouse-position {
-            position: fixed;
+            position: absolute;
             top: 10px;
             left: 10px;
             background-color: rgba(0, 0, 0, 0.8);
@@ -523,6 +574,268 @@
             font-size: 12px;
             z-index: 1001;
             display: none;
+        }
+
+        /* 作品集卡片容器 */
+        .portfolio-card {
+            position: absolute;
+            top: 1700px;
+            left: 100px;
+            width: 400px;
+            height: 500px;
+            z-index: 100;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        /* 卡片hover效果 - 对角线渐变 */
+        .portfolio-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(255, 255, 255, 1) 0%,
+                rgba(255, 255, 255, 0.98) 10%,
+                rgba(255, 255, 255, 0.94) 20%,
+                rgba(255, 255, 255, 0.88) 30%,
+                rgba(255, 255, 255, 0.8) 40%,
+                rgba(255, 255, 255, 0.7) 49.8%,
+                rgba(255, 255, 255, 0.7) 49.9%,
+                rgba(255, 255, 255, 0.7) 50.1%,
+                rgba(255, 255, 255, 0.69) 52%,
+                rgba(255, 255, 255, 0.64) 60%,
+                rgba(255, 255, 255, 0.49) 70%,
+                rgba(255, 255, 255, 0.25) 80%,
+                rgba(255, 255, 255, 0.09) 90%,
+                rgba(255, 255, 255, 0.01) 98%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            border-radius: 60px;
+            z-index: 5;
+            pointer-events: none;
+            /* 初始状态：线条经过右上角 */
+            background-size: 300% 300%;
+            background-position: 100% 0%;
+            transition: background-position 0.6s ease;
+        }
+
+        /* 卡片hover状态 - 线条移动到左下角 */
+        .portfolio-card:hover::after {
+            /* 线条经过左下角 */
+            background-position: 0% 100%;
+        }
+
+        /* 卡片上部分 */
+        .card-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: var(--primary-blue);
+            border-radius: 60px 60px 0 0;
+            border: 2px solid var(--dark-blue);
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+            z-index: 1;
+            transition: border-color 0.3s ease;
+        }
+
+        /* 卡片上部分hover效果 */
+        .portfolio-card:hover .card-top {
+            border-color: var(--dark-blue);
+        }
+
+        /* 卡片下部分 */
+        .card-bottom {
+            position: absolute;
+            top: 250px;
+            left: 0;
+            width: 100%;
+            height: 250px;
+            background-color: var(--primary-blue);
+            border-radius: 0 0 60px 60px;
+            border: 2px solid var(--dark-blue);
+            border-top: none;
+            z-index: 1;
+            transition: border-color 0.3s ease;
+        }
+
+        /* 卡片下部分hover效果 */
+        .portfolio-card:hover .card-bottom {
+            border-color: var(--dark-blue);
+        }
+
+        /* 卡片左部分 */
+        .card-left {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 60px;
+            height: 200px;
+            background-color: var(--primary-blue);
+            border-left: 2px solid var(--dark-blue);
+            z-index: 1;
+            transition: border-color 0.3s ease;
+        }
+
+        /* 卡片左部分hover效果 */
+        .portfolio-card:hover .card-left {
+            border-color: var(--dark-blue);
+        }
+
+        /* 卡片右部分 */
+        .card-right {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 60px;
+            height: 200px;
+            background-color: var(--primary-blue);
+            border-right: 2px solid var(--dark-blue);
+            z-index: 1;
+            transition: border-color 0.3s ease;
+        }
+
+        /* 卡片右部分hover效果 */
+        .portfolio-card:hover .card-right {
+            border-color: var(--dark-blue);
+        }
+
+        /* 镂空边框 */
+        .portfolio-frame {
+            position: absolute;
+            top: 50px;
+            left: 60px;
+            width: 280px;
+            height: 220px;
+            border: 10px solid var(--primary-white);
+            border-radius: 0;
+            box-sizing: border-box;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+
+        /* 画框内的图片预览 */
+        .work-image {
+            position: absolute;
+            top: 60px;
+            left: 70px;
+            width: 260px;
+            height: 200px;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            z-index: 15;
+        }
+
+        /* 作品标题 */
+        .work-title {
+            position: absolute;
+            top: 280px;
+            left: 200px;
+            font-size: 30px;
+            color: var(--primary-white);
+            font-weight: normal;
+            z-index: 101;
+            transform: translateX(-50%);
+            transition: color 0.5s ease;
+            white-space: nowrap;
+            max-width: none;
+        }
+
+        /* 标题hover效果 */
+        .portfolio-card:hover .work-title {
+            color: var(--primary-blue);
+        }
+
+        /* 作品描述 */
+        .work-description {
+            position: absolute;
+            top: 350px;
+            left: 30px;
+            font-size: 15px;
+            color: var(--primary-white);
+            z-index: 101;
+            width: 340px;
+            line-height: 1.4;
+            transition: color 0.5s ease;
+        }
+
+        /* 箭头组容器 */
+        .arrow-group {
+            position: absolute;
+            top: 440px;
+            left: 330px;
+            z-index: 103;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* 第二个箭头组容器 */
+        .arrow-group-2 {
+            position: absolute;
+            top: 560px;
+            left: 210px;
+            z-index: 103;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* 第二个箭头组内的元素为黑色 */
+        .arrow-group-2 .arrow-horizontal,
+        .arrow-group-2 .arrow-vertical,
+        .arrow-group-2 .arrow-long {
+            background-color: black;
+        }
+
+        /* 箭头 - 水平部分 */
+        .arrow-horizontal {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 30px;
+            height: 6px;
+            background-color: white;
+        }
+
+        /* 箭头 - 垂直部分 */
+        .arrow-vertical {
+            position: absolute;
+            top: 0px;
+            left: 24px;
+            width: 6px;
+            height: 30px;
+            background-color: white;
+        }
+
+        /* 箭头 - 长垂直部分 */
+        .arrow-long {
+            position: absolute;
+            top: -1px;
+            left: 9px;
+            width: 6px;
+            height: 36px;
+            background-color: white;
+            transform: rotate(45deg);
+            transform-origin: center;
+        }
+
+        /* 描述hover效果 */
+        .portfolio-card:hover .work-description {
+            color: var(--primary-blue);
+        }
+
+        /* 箭头hover动画 */
+        .portfolio-card:hover .arrow-group {
+            transform: translate(120px, -120px);
+        }
+
+        .portfolio-card:hover .arrow-group-2 {
+            transform: translate(120px, -120px);
         }
 
         @keyframes fadeInAndFloat {
@@ -603,12 +916,20 @@
             }
         }
 
-        /* 开发者模式关闭，所有标记点都不显示 */
+        /* 默认隐藏所有位置标记 */
         .position-marker,
         .subtitle-marker,
         .capsule-marker,
         .quote-marker {
-            display: none !important;
+            display: none;
+        }
+
+        /* 当开发者模式开启时显示位置标记 */
+        .dev-grid[style*="block"] ~ .content .position-marker,
+        .dev-grid[style*="block"] ~ .content .subtitle-marker,
+        .dev-grid[style*="block"] ~ .content .capsule-marker,
+        .dev-grid[style*="block"] ~ .content .quote-marker {
+            display: block;
         }
 
         @keyframes slideInFromLeft {
@@ -624,6 +945,7 @@
     </style>
 </head>
 <body>
+    <div id="page">
     <div class="top-bar">
         <button class="nav-button">About me</button>
         <button class="nav-button">My works</button>
@@ -645,8 +967,9 @@
 
     <div class="mouse-position" id="mousePosition">Mouse: 0, 0</div>
 
-    <div class="content">
-        <div class="position-marker"></div>
+    <div class="main-container" id="mainContainer">
+        <div class="content">
+            <div class="position-marker"></div>
         <h1 class="main-title">Every Universe Deserves a Form.</h1>
         <div class="subtitle-marker"></div>
         <h2 class="subtitle">I'm <span class="bold-name">Setrynn Zhou</span></h2>
@@ -667,7 +990,9 @@
         </div>
         <div class="center-line"></div>
         <div class="center-divider"></div>
+        <div class="horizontal-divider"></div>
         
+        <h1 class="my-works-title">My Works</h1>
         <h1 class="who-am-i-title">Who am I?</h1>
         <p class="who-am-i-content">I'm Setrynn Zhou, an undergraduate game designer.<br>
         Inspired by the games I played in my childhood, I developed a deep passion for creating interactive worlds.<br>
@@ -680,9 +1005,55 @@
             <div class="works-button-text">See my works</div>
         </div>
         
+        <!-- 作品集卡片 -->
+        <div class="portfolio-card">
+            <div class="card-top"></div>
+            <div class="card-bottom"></div>
+            <div class="card-left"></div>
+            <div class="card-right"></div>
+            <div class="portfolio-frame"></div>
+            <img class="work-image" id="workImage1" src="" alt="Work Preview" style="display: none;">
+            <h3 class="work-title" id="workTitle1">Loading...</h3>
+            <p class="work-description" id="workDescription1">Loading...</p>
+            <div class="arrow-group">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+            <div class="arrow-group-2">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+        </div>
+        
+        <!-- 第二个作品集卡片 -->
+        <div class="portfolio-card" style="top: 1700px; left: 50%; transform: translateX(-50%);">
+            <div class="card-top"></div>
+            <div class="card-bottom"></div>
+            <div class="card-left"></div>
+            <div class="card-right"></div>
+            <div class="portfolio-frame"></div>
+            <img class="work-image" id="workImage2" src="" alt="Work Preview" style="display: none;">
+            <h3 class="work-title" id="workTitle2">Loading...</h3>
+            <p class="work-description" id="workDescription2">Loading...</p>
+            <div class="arrow-group">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+            <div class="arrow-group-2">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+        </div>
+        
         <!-- 主页内容将在这里添加 -->
+        </div>
     </div>
 
+    <script src="work-loader.js"></script>
     <script>
         let targetY = 0;
         let currentY = 0;
@@ -695,8 +1066,11 @@
             // 简单的线性插值，无回弹
             currentY += (targetY - currentY) * smoothing;
             
+            // 计算缩放因子，用于修正transform
+            const s = (window.innerWidth / 1536);
+            
             // 应用视差效果到背景
-            const rate = currentY * -0.2;
+            const rate = (currentY / s) * -0.2;
             const background = document.getElementById('background');
             background.style.transform = `translateY(${rate}px)`;
             
@@ -704,15 +1078,15 @@
             const content = document.querySelector('.content');
             const mousePosition = document.getElementById('mousePosition');
             
-            content.style.transform = `translateY(${-currentY}px)`;
-            mousePosition.style.transform = `translateY(${-currentY}px)`;
+            content.style.transform = `translateY(${-currentY / s}px)`;
+            mousePosition.style.transform = `translateY(${-currentY / s}px)`;
             
             // 开发者标线：横线跟随阻尼，竖线跟随屏幕
             const devLinesHorizontal = document.getElementById('devLinesHorizontal');
             const devLinesVertical = document.getElementById('devLinesVertical');
             
             if (devLinesHorizontal) {
-                devLinesHorizontal.style.transform = `translateY(${-currentY}px)`;
+                devLinesHorizontal.style.transform = `translateY(${-currentY / s}px)`;
             }
             if (devLinesVertical) {
                 devLinesVertical.style.transform = `translateY(0px)`;
@@ -726,6 +1100,9 @@
             targetY = window.pageYOffset;
             currentY = window.pageYOffset;
             
+            // 计算缩放因子，用于修正transform
+            const s = (window.innerWidth / 1536);
+            
             // 根据当前滚动位置设置所有transform
             const background = document.getElementById('background');
             const content = document.querySelector('.content');
@@ -733,37 +1110,272 @@
             const mousePosition = document.getElementById('mousePosition');
             
             // 设置背景视差效果
-            const rate = currentY * -0.2;
+            const rate = (currentY / s) * -0.2;
             background.style.transform = `translateY(${rate}px)`;
             
             // 设置内容阻尼效果
-            content.style.transform = `translateY(${-currentY}px)`;
-            mousePosition.style.transform = `translateY(${-currentY}px)`;
+            content.style.transform = `translateY(${-currentY / s}px)`;
+            mousePosition.style.transform = `translateY(${-currentY / s}px)`;
             
             // 开发者标线使用阻尼位置
             const devLinesHorizontal = document.getElementById('devLinesHorizontal');
             const devLinesVertical = document.getElementById('devLinesVertical');
             
             if (devLinesHorizontal) {
-                devLinesHorizontal.style.transform = `translateY(${-currentY}px)`;
+                devLinesHorizontal.style.transform = `translateY(${-currentY / s}px)`;
             }
             if (devLinesVertical) {
                 devLinesVertical.style.transform = `translateY(0px)`;
             }
             
+            // 初始化时启用开发者模式
+            if (devModeEnabled) {
+                devGrid.style.display = 'block';
+                mousePosition.style.display = 'block';
+                generateDevGrid();
+            }
+            
             isInitialized = true;
         }
 
+        // 全局变量存储最大滚动高度
+        let maxScrollHeight = 0;
+        
         window.addEventListener('scroll', function() {
-            // 滚动事件处理由smoothScroll函数接管
+            // 限制滚动范围，防止超出红色分割线
+            if (maxScrollHeight > 0 && window.pageYOffset > maxScrollHeight) {
+                window.scrollTo(0, maxScrollHeight);
+            }
         });
+
+        // 整体缩放功能
+        function applyGlobalScaling() {
+            const canvasWidth = window.innerWidth;
+            const scaleFactor = canvasWidth / 1536;
+            
+            // 对页面容器应用缩放，而不是body
+            const page = document.getElementById('page');
+            page.style.transform = `scale(${scaleFactor})`;
+            page.style.width = '1536px';
+            
+            // 计算并绘制分割线
+            drawBottomDivider();
+            
+            // 根据红色分割线位置设置页面总高度
+            const dividerY = 1700 + 500 + 100; // 2300
+            const contactY = dividerY + 40 + 80; // Contact文字底部位置
+            const contactContentY = contactY + 150; // Contact内容位置
+            const redDividerY = contactContentY + 100 + 200; // 红色分割线位置
+            const finalHeight = redDividerY + 2 + 100; // 红色分割线高度(2px) + 额外留100px空间
+            
+            // 设置容器高度，由红色分割线位置决定
+            const mainContainer = document.getElementById('mainContainer');
+            if (mainContainer) {
+                mainContainer.style.height = finalHeight + 'px';
+            }
+            
+            // 按缩放后的视觉高度设置页面高度
+            const visualHeight = finalHeight * scaleFactor;
+            
+            document.documentElement.style.height = visualHeight + 'px';
+            document.body.style.height = visualHeight + 'px';
+            
+            // 调整背景图片高度，使其与页面内容高度匹配
+            const backgroundImage = document.getElementById('background');
+            if (backgroundImage) {
+                backgroundImage.style.height = finalHeight + 'px';
+            }
+            
+            // 设置最大滚动高度，按视觉高度计算
+            maxScrollHeight = visualHeight - window.innerHeight;
+            
+            console.log(`Page height set to ${finalHeight}px, visual height ${visualHeight}px, divider at ${dividerY}px`);
+            console.log(`Background height set to ${finalHeight}px`);
+            console.log(`Max scroll height set to ${maxScrollHeight}px`);
+        }
+        
+        // 绘制底部分割线
+        function drawBottomDivider() {
+            // 移除已存在的底部分割线、Contact文字和相关元素
+            const existingDivider = document.getElementById('bottomDivider');
+            const existingContactText = document.getElementById('contactText');
+            const existingInstagramIcon = document.getElementById('instagramIcon');
+            const existingWechatIcon = document.getElementById('wechatIcon');
+            const existingSetrMythText = document.getElementById('setrMythText');
+            const existingSetrynnText = document.getElementById('setrynnText');
+            const existingRedDivider = document.getElementById('redDivider');
+            
+            if (existingDivider) existingDivider.remove();
+            if (existingContactText) existingContactText.remove();
+            if (existingInstagramIcon) existingInstagramIcon.remove();
+            if (existingWechatIcon) existingWechatIcon.remove();
+            if (existingSetrMythText) existingSetrMythText.remove();
+            if (existingSetrynnText) existingSetrynnText.remove();
+            if (existingRedDivider) existingRedDivider.remove();
+            
+            // 计算分割线位置：卡片顶部(1700) + 卡片高度(500) + 间距(100) = 2300
+            const dividerY = 1700 + 500 + 100; // 2300
+            
+            // 创建分割线元素
+            const divider = document.createElement('div');
+            divider.id = 'bottomDivider';
+            divider.style.position = 'absolute';
+            divider.style.top = dividerY + 'px';
+            divider.style.left = '10%';
+            divider.style.width = '80%';
+            divider.style.height = '2px';
+            divider.style.background = 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 1) 80%, transparent 100%)';
+            divider.style.zIndex = '1000';
+            divider.style.pointerEvents = 'none';
+            
+            // 添加到content容器中，这样会被正确缩放
+            const contentContainer = document.querySelector('.content');
+            if (contentContainer) {
+                contentContainer.appendChild(divider);
+            }
+            
+            // 添加Contact文字，位置在分割线下方，与My Works格式相同
+            const contactText = document.createElement('div');
+            contactText.id = 'contactText';
+            contactText.textContent = 'Contact';
+            contactText.style.position = 'absolute';
+            contactText.style.top = (dividerY + 40) + 'px'; // 分割线下方40px
+            contactText.style.left = '50%';
+            contactText.style.transform = 'translateX(-50%)';
+            contactText.style.fontSize = '80px';
+            contactText.style.fontFamily = 'Century Gothic, sans-serif';
+            contactText.style.color = 'var(--primary-white)';
+            contactText.style.fontWeight = 'bold';
+            contactText.style.zIndex = '1000';
+            contactText.style.pointerEvents = 'none';
+            
+            if (contentContainer) {
+                contentContainer.appendChild(contactText);
+            }
+            
+            // 添加图标和文字，位置在Contact下方150px
+            const contactContentY = dividerY + 40 + 80 + 150; // Contact文字底部 + 150px
+            
+            // Instagram图标
+            const instagramIcon = document.createElement('img');
+            instagramIcon.id = 'instagramIcon';
+            instagramIcon.src = 'work-source/Contact-Icons/instagram.png';
+            instagramIcon.style.position = 'absolute';
+            instagramIcon.style.top = contactContentY + 'px';
+            instagramIcon.style.left = '10%';
+            instagramIcon.style.width = '100px';
+            instagramIcon.style.height = '100px';
+            instagramIcon.style.zIndex = '1000';
+            instagramIcon.style.pointerEvents = 'none';
+            
+            // WeChat图标
+            const wechatIcon = document.createElement('img');
+            wechatIcon.id = 'wechatIcon';
+            wechatIcon.src = 'work-source/Contact-Icons/wechat.png';
+            wechatIcon.style.position = 'absolute';
+            wechatIcon.style.top = contactContentY + 'px';
+            wechatIcon.style.left = '60%';
+            wechatIcon.style.width = '100px';
+            wechatIcon.style.height = '100px';
+            wechatIcon.style.zIndex = '1000';
+            wechatIcon.style.pointerEvents = 'none';
+            
+            // setr.myth文字 - 在Instagram图标右边150px位置，与图标居中对齐
+            const setrMythText = document.createElement('div');
+            setrMythText.id = 'setrMythText';
+            setrMythText.textContent = 'setr.myth';
+            setrMythText.style.position = 'absolute';
+            setrMythText.style.top = contactContentY + 'px';
+            setrMythText.style.left = 'calc(10% + 100px + 50px)';
+            setrMythText.style.transform = 'translateY(10px)'; // 下移10px，使文字中心与图标中心对齐
+            setrMythText.style.fontSize = '60px';
+            setrMythText.style.fontFamily = 'Century Gothic, sans-serif';
+            setrMythText.style.color = 'var(--primary-white)';
+            setrMythText.style.fontWeight = 'normal';
+            setrMythText.style.zIndex = '1000';
+            setrMythText.style.pointerEvents = 'none';
+            
+            // setrynn文字 - 在WeChat图标右边150px位置，与图标居中对齐
+            const setrynnText = document.createElement('div');
+            setrynnText.id = 'setrynnText';
+            setrynnText.textContent = 'setrynn';
+            setrynnText.style.position = 'absolute';
+            setrynnText.style.top = contactContentY + 'px';
+            setrynnText.style.left = 'calc(60% + 100px + 50px)';
+            setrynnText.style.transform = 'translateY(10px)'; // 下移10px，使文字中心与图标中心对齐
+            setrynnText.style.fontSize = '60px';
+            setrynnText.style.fontFamily = 'Century Gothic, sans-serif';
+            setrynnText.style.color = 'var(--primary-white)';
+            setrynnText.style.fontWeight = 'normal';
+            setrynnText.style.zIndex = '1000';
+            setrynnText.style.pointerEvents = 'none';
+            
+            // 添加到content容器中
+            if (contentContainer) {
+                contentContainer.appendChild(instagramIcon);
+                contentContainer.appendChild(wechatIcon);
+                contentContainer.appendChild(setrMythText);
+                contentContainer.appendChild(setrynnText);
+            }
+            
+            // 在图标下方200px添加红色分割线
+            const redDividerY = contactContentY + 100 + 200; // 图标底部 + 200px
+            
+            const redDivider = document.createElement('div');
+            redDivider.id = 'redDivider';
+            redDivider.style.position = 'absolute';
+            redDivider.style.top = redDividerY + 'px';
+            redDivider.style.left = '10%';
+            redDivider.style.width = '80%';
+            redDivider.style.height = '2px';
+            redDivider.style.background = 'red';
+            redDivider.style.zIndex = '1000';
+            redDivider.style.pointerEvents = 'none';
+            
+            if (contentContainer) {
+                contentContainer.appendChild(redDivider);
+            }
+            
+            console.log(`Bottom divider drawn at fixed y=${dividerY}`);
+            console.log(`Contact text added at y=${dividerY + 40}`);
+            console.log(`Contact content added at y=${contactContentY}`);
+            console.log(`Red divider added at y=${redDividerY}`);
+        }
+
+        // 自适应标题字体大小
+        function adjustTitleFontSize() {
+            const titles = document.querySelectorAll('.work-title');
+            titles.forEach(title => {
+                const maxWidth = 400;
+                let fontSize = 30;
+                title.style.fontSize = fontSize + 'px';
+                
+                // 如果文本宽度超过最大宽度，缩小字体
+                while (title.scrollWidth > maxWidth && fontSize > 12) {
+                    fontSize -= 1;
+                    title.style.fontSize = fontSize + 'px';
+                }
+            });
+        }
 
         // 页面加载完成后初始化
         window.addEventListener('load', function() {
             initializeScroll();
             // 启动平滑滚动
             smoothScroll();
+            // 应用整体缩放
+            applyGlobalScaling();
+            // 加载作品内容
+            if (window.workLoader) {
+                window.workLoader.loadWorkContent(1);
+                window.workLoader.loadWorkContent(2);
+                // 内容加载完成后调整字体大小
+                setTimeout(adjustTitleFontSize, 100);
+            }
         });
+        
+        // 窗口大小改变时重新缩放
+        window.addEventListener('resize', applyGlobalScaling);
 
         // 生成开发者标线
         function generateDevGrid() {
@@ -808,6 +1420,41 @@
             }
         }
 
+        // 开发者模式状态
+        let devModeEnabled = true;
+
+        // 检查图片是否存在
+        function checkImageExists(imagePath) {
+            return new Promise((resolve) => {
+                try {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = imagePath;
+                } catch (error) {
+                    resolve(false);
+                }
+            });
+        }
+
+
+
+        // 切换开发者模式
+        function toggleDevMode() {
+            devModeEnabled = !devModeEnabled;
+            const devGrid = document.getElementById('devGrid');
+            const mousePosition = document.getElementById('mousePosition');
+            
+            if (devModeEnabled) {
+                devGrid.style.display = 'block';
+                mousePosition.style.display = 'block';
+                generateDevGrid();
+            } else {
+                devGrid.style.display = 'none';
+                mousePosition.style.display = 'none';
+            }
+        }
+
         // 页面加载时生成标线
         window.addEventListener('load', generateDevGrid);
         
@@ -822,6 +1469,14 @@
 
         // 添加鼠标移动监听器
         document.addEventListener('mousemove', updateMousePosition);
+
+        // 添加键盘监听器 - z键切换开发者模式
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'z' || e.key === 'Z') {
+                toggleDevMode();
+            }
+        });
     </script>
+    </div>
 </body>
 </html>
