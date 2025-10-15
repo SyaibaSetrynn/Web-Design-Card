@@ -14,20 +14,43 @@
             font-family: 'Century Gothic', sans-serif;
         }
 
-        body {
-            height: auto;
-            overflow-x: hidden;
-            overflow-y: auto;
+        html {
+            height: 1700px;
+            overflow-y: auto; /* 只有html有滚动条 */
         }
 
-        html {
-            height: auto;
-            overflow-y: auto;
+        body {
+            height: 100%;
+            overflow: hidden; /* 禁用body的滚动条 */
         }
 
         #page {
             width: 1536px;
             transform-origin: top left;
+        }
+
+        /* 自定义滚动条 - 已禁用 */
+        .custom-scrollbar {
+            display: none !important; /* 禁用自定义滚动条 */
+        }
+
+        .custom-scrollbar-thumb {
+            position: absolute !important;
+            left: 5px !important;
+            right: 5px !important;
+            height: 150px !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 15px !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            pointer-events: auto !important;
+            transform: none !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .custom-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 1) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
         }
 
         .content {
@@ -49,6 +72,7 @@
             width: 100%;
             height: auto;
             min-height: 100vh;
+            overflow: hidden; /* 防止内容撑开html */
         }
 
         html {
@@ -945,6 +969,11 @@
     </style>
 </head>
 <body>
+    <!-- 自定义滚动条 -->
+    <div class="custom-scrollbar">
+        <div class="custom-scrollbar-thumb" id="scrollbarThumb"></div>
+    </div>
+
     <div id="page">
     <div class="top-bar">
         <button class="nav-button">About me</button>
@@ -1061,6 +1090,7 @@
         let isInitialized = false;
 
         function smoothScroll() {
+            // 使用浏览器原生滚动
             targetY = window.pageYOffset;
             
             // 简单的线性插值，无回弹
@@ -1072,14 +1102,20 @@
             // 应用视差效果到背景
             const rate = (currentY / s) * -0.2;
             const background = document.getElementById('background');
-            background.style.transform = `translateY(${rate}px)`;
+            if (background) {
+                background.style.transform = `translateY(${rate}px)`;
+            }
             
             // 应用阻尼效果到内容区域（除了顶边栏和开发者标线）
             const content = document.querySelector('.content');
             const mousePosition = document.getElementById('mousePosition');
             
-            content.style.transform = `translateY(${-currentY / s}px)`;
-            mousePosition.style.transform = `translateY(${-currentY / s}px)`;
+            if (content) {
+                content.style.transform = `translateY(${-currentY / s}px)`;
+            }
+            if (mousePosition) {
+                mousePosition.style.transform = `translateY(${-currentY / s}px)`;
+            }
             
             // 开发者标线：横线跟随阻尼，竖线跟随屏幕
             const devLinesHorizontal = document.getElementById('devLinesHorizontal');
@@ -1138,15 +1174,125 @@
             isInitialized = true;
         }
 
-        // 全局变量存储最大滚动高度
-        let maxScrollHeight = 0;
+        // 自定义滚动变量
+        let currentScrollPosition = 0;
+        let maxScrollPosition = 1;
+        let isDragging = false;
+        let scrollbarThumb;
         
-        window.addEventListener('scroll', function() {
-            // 限制滚动范围，防止超出红色分割线
-            if (maxScrollHeight > 0 && window.pageYOffset > maxScrollHeight) {
-                window.scrollTo(0, maxScrollHeight);
+        // 全局拖拽状态
+        let dragStartY = 0;
+        let dragStartScroll = 0;
+        
+        // 初始化自定义滚动 - 已禁用
+        function initCustomScroll() {
+            console.log('自定义滚动已禁用，使用原生滚动');
+            // 自定义滚动功能已禁用
+        }
+        
+        // 更新滚动位置 - 已禁用
+        function updateScrollPosition(newPosition) {
+            // 自定义滚动功能已禁用
+        }
+        
+        // 显示调试红点
+        function showDebugDot() {
+            // 移除之前的红点
+            const existingDot = document.getElementById('debugDot');
+            if (existingDot) {
+                existingDot.remove();
             }
-        });
+            
+            // 创建新的红点
+            const dot = document.createElement('div');
+            dot.id = 'debugDot';
+            dot.style.position = 'fixed';
+            dot.style.left = '50%';
+            dot.style.top = '50%';
+            dot.style.width = '20px';
+            dot.style.height = '20px';
+            dot.style.background = 'red';
+            dot.style.borderRadius = '50%';
+            dot.style.transform = 'translate(-50%, -50%)';
+            dot.style.zIndex = '99999';
+            dot.style.pointerEvents = 'none';
+            
+            document.body.appendChild(dot);
+            
+            // 0.1秒后移除红点
+            setTimeout(() => {
+                if (dot && dot.parentNode) {
+                    dot.remove();
+                }
+            }, 100);
+        }
+        
+        // 更新滚动条滑块位置
+        function updateScrollbarThumb() {
+            if (scrollbarThumb) {
+                const thumbHeight = Math.max(150, window.innerHeight * 0.3); // 滑块最小高度150px，最大30%屏幕高度
+                const availableHeight = window.innerHeight - thumbHeight;
+                const thumbTop = currentScrollPosition * availableHeight;
+                
+                // 调试信息（可选）
+                // console.log('更新滑块位置:', { currentScrollPosition, thumbTop });
+                
+                // 使用setAttribute确保样式更新
+                scrollbarThumb.setAttribute('style', 
+                    `position: absolute !important; ` +
+                    `left: 5px !important; ` +
+                    `right: 5px !important; ` +
+                    `height: ${thumbHeight}px !important; ` +
+                    `top: ${thumbTop}px !important; ` +
+                    `background: rgba(255, 255, 255, 0.9) !important; ` +
+                    `border-radius: 15px !important; ` +
+                    `cursor: pointer !important; ` +
+                    `transition: all 0.2s ease !important; ` +
+                    `pointer-events: auto !important; ` +
+                    `transform: none !important; ` +
+                    `box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;`
+                );
+            }
+        }
+        
+        // 更新内容位置
+        function updateContentPosition() {
+            const scrollDistance = currentScrollPosition * maxScrollPosition;
+            targetY = scrollDistance;
+            currentY = scrollDistance; // 立即更新currentY，确保内容立即移动
+            
+            // 手动应用变换
+            const s = (window.innerWidth / 1536);
+            
+            // 应用视差效果到背景
+            const rate = (currentY / s) * -0.2;
+            const background = document.getElementById('background');
+            if (background) {
+                background.style.transform = `translateY(${rate}px)`;
+            }
+            
+            // 应用阻尼效果到内容区域
+            const content = document.querySelector('.content');
+            const mousePosition = document.getElementById('mousePosition');
+            
+            if (content) {
+                content.style.transform = `translateY(${-currentY / s}px)`;
+            }
+            if (mousePosition) {
+                mousePosition.style.transform = `translateY(${-currentY / s}px)`;
+            }
+            
+            // 开发者标线
+            const devLinesHorizontal = document.getElementById('devLinesHorizontal');
+            const devLinesVertical = document.getElementById('devLinesVertical');
+            
+            if (devLinesHorizontal) {
+                devLinesHorizontal.style.transform = `translateY(${-currentY / s}px)`;
+            }
+            if (devLinesVertical) {
+                devLinesVertical.style.transform = `translateY(0px)`;
+            }
+        }
 
         // 整体缩放功能
         function applyGlobalScaling() {
@@ -1174,11 +1320,8 @@
                 mainContainer.style.height = finalHeight + 'px';
             }
             
-            // 按缩放后的视觉高度设置页面高度
-            const visualHeight = finalHeight * scaleFactor;
-            
-            document.documentElement.style.height = visualHeight + 'px';
-            document.body.style.height = visualHeight + 'px';
+            // 不设置body高度，让CSS控制
+            // document.body.style.height = finalHeight + 'px';
             
             // 调整背景图片高度，使其与页面内容高度匹配
             const backgroundImage = document.getElementById('background');
@@ -1186,12 +1329,9 @@
                 backgroundImage.style.height = finalHeight + 'px';
             }
             
-            // 设置最大滚动高度，按视觉高度计算
-            maxScrollHeight = visualHeight - window.innerHeight;
-            
-            console.log(`Page height set to ${finalHeight}px, visual height ${visualHeight}px, divider at ${dividerY}px`);
+            console.log(`Page height set to ${finalHeight}px, max scroll position ${maxScrollPosition}px, divider at ${dividerY}px`);
             console.log(`Background height set to ${finalHeight}px`);
-            console.log(`Max scroll height set to ${maxScrollHeight}px`);
+            console.log(`Custom scroll initialized`);
         }
         
         // 绘制底部分割线
@@ -1365,6 +1505,8 @@
             smoothScroll();
             // 应用整体缩放
             applyGlobalScaling();
+            // 初始化自定义滚动
+            initCustomScroll();
             // 加载作品内容
             if (window.workLoader) {
                 window.workLoader.loadWorkContent(1);
@@ -1383,7 +1525,8 @@
             const devLinesVertical = document.getElementById('devLinesVertical');
             const windowHeight = window.innerHeight;
             const windowWidth = window.innerWidth;
-            const documentHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+            // 使用固定的页面高度，避免受开发者标线影响
+            const documentHeight = 3000; // 固定高度，足够覆盖所有内容
             
             // 清除现有标线
             devLinesHorizontal.innerHTML = '';
