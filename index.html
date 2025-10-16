@@ -1169,7 +1169,7 @@
         <!-- 作品集卡片容器 -->
         <div class="carousel-container" id="carouselContainer">
         <!-- 作品集卡片 -->
-        <div class="portfolio-card" style="left: 118px;">
+        <div class="portfolio-card" style="left: 118px;" onclick="goToDetail('Card1', 1)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1191,7 +1191,7 @@
         </div>
         
         <!-- 第二个作品集卡片 -->
-        <div class="portfolio-card" style="left: 568px;">
+        <div class="portfolio-card" style="left: 568px;" onclick="goToDetail('Card2', 2)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1213,7 +1213,7 @@
         </div>
         
         <!-- 第三个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1018px;">
+        <div class="portfolio-card" style="left: 1018px;" onclick="goToDetail('Card3', 3)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1235,7 +1235,7 @@
         </div>
         
         <!-- 第四个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card4', 4)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1257,7 +1257,7 @@
         </div>
         
         <!-- 第五个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card5', 5)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1279,7 +1279,7 @@
         </div>
         
         <!-- 第六个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card6', 6)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1301,7 +1301,7 @@
         </div>
         
         <!-- 第七个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card7', 7)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1323,7 +1323,7 @@
         </div>
         
         <!-- 第八个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card8', 8)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1345,7 +1345,7 @@
         </div>
         
         <!-- 第九个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card9', 9)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1824,6 +1824,9 @@
             
             // 初始化轮播
             initCarousel();
+            
+            // 处理从detail.html跳转过来的滚动位置
+            handleScrollFromDetail();
         });
         
         // 窗口大小改变时重新缩放
@@ -2082,6 +2085,29 @@
                     redDot.parentNode.removeChild(redDot);
                 }
             }, 500);
+        }
+
+        // 跳转到详情页
+        function goToDetail(title, id) {
+            const url = `detail.html?title=${encodeURIComponent(title)}&id=${id}`;
+            window.location.href = url;
+        }
+
+        // 处理从detail.html跳转过来的滚动位置
+        function handleScrollFromDetail() {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#scroll=')) {
+                const scrollPosition = parseInt(hash.replace('#scroll=', ''));
+                if (!isNaN(scrollPosition)) {
+                    // 延迟执行滚动，确保页面完全加载
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: scrollPosition,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
         }
 
         // 初始化轮播

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setrynn's Universe - Detail</title>
+    <link rel="icon" type="image/png" href="work-source/webicon.png">
+    <link rel="shortcut icon" type="image/png" href="work-source/webicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Century Gothic', sans-serif;
+        }
+
+        html {
+            height: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        body {
+            height: auto;
+            overflow: visible;
+            overflow-x: hidden;
+        }
+
+        #page {
+            width: 100%;
+            max-width: 100vw;
+            transform-origin: top left;
+        }
+
+        .content {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            z-index: 1;
+            padding: 120px 50px 50px 50px;
+            color: white;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            box-sizing: border-box;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100%;
+            height: auto;
+            min-height: 100vh;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .background-image {
+            width: 100%;
+            height: 100%;
+            background-image: url('The_Background.png');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            will-change: transform;
+        }
+
+        :root {
+            --primary-blue: #040570;
+            --primary-white: #ffffff;
+            --secondary-blue: #0a0a8a;
+            --accent-gold: #ffd700;
+            --text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(to bottom, 
+                rgba(4, 5, 112, 1) 0%, 
+                rgba(4, 5, 112, 0.5) 100%);
+            z-index: 10;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-button {
+            height: 100%;
+            width: 10%;
+            background-color: transparent;
+            color: var(--primary-white);
+            border: none;
+            font-size: 19.2px;
+            font-weight: normal;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 40px;
+            background-color: var(--primary-white);
+        }
+
+        .nav-button:first-child::before {
+            display: block;
+        }
+
+        .nav-button:not(:first-child)::before {
+            display: block;
+        }
+
+        .nav-button:hover {
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0.8) 0%, 
+                rgba(255, 255, 255, 0.4) 100%);
+            color: var(--primary-blue);
+        }
+
+        .nav-button:active {
+            font-weight: bold;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 52px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            z-index: 10;
+        }
+
+        /* 文本框样式 */
+        .text-box {
+            position: absolute;
+            width: 450px;
+            height: 300px;
+            background: transparent;
+            border: none;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .text-box-left {
+            top: 50px;
+            left: 100px;
+        }
+
+        .text-box-right {
+            top: 400px;
+            right: 100px;
+        }
+
+        .text-box-content {
+            color: white;
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: left;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* 左箭头 - 第一个长方形 45度 */
+        .back-button::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 8px;
+            background: white;
+            left: 25%;
+            top: 79%;
+            transform: translate(-50%, -50%) rotate(45deg) translateY(-8px);
+        }
+
+        /* 左箭头 - 第二个长方形 -45度 */
+        .back-button::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 8px;
+            background: white;
+            left: 25%;
+            top: 21%;
+            transform: translate(-50%, -50%) rotate(-45deg) translateY(8px);
+        }
+
+        /* 左箭头 - 第三个长方形 0度（水平线） */
+        .back-button .arrow-line {
+            position: absolute;
+            width: 52px;
+            height: 8px;
+            background: white;
+            left: 58%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 24px;
+            color: var(--accent-gold);
+        }
+
+        /* 图片和批注部分 */
+        .image-annotation-section {
+            position: absolute;
+            top: 50px;
+            right: 100px;
+            width: 450px;
+            z-index: 10;
+        }
+
+        .annotation-image {
+            width: 450px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .annotation-text {
+            font-size: 12px;
+            color: white;
+            text-align: left;
+            line-height: 1.4;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            max-width: 450px;
+            margin-top: -10px;
+        }
+
+        /* 画框部分 */
+        .picture-frame {
+            position: absolute;
+            top: 400px;
+            left: 100px;
+            width: 450px;
+            height: 300px;
+            border: none;
+            border-radius: 15px;
+            background: transparent;
+            box-shadow: none;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .frame-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="page">
+        <div class="top-bar">
+            <button class="nav-button" onclick="goToIndexSection(400)">About me</button>
+            <button class="nav-button" onclick="goToIndexSection(850)">My works</button>
+            <button class="nav-button" onclick="goToIndexSection(1225)">Contact</button>
+        </div>
+
+        <div class="background-container">
+            <div class="background-image" id="background"></div>
+        </div>
+
+        <div class="content">
+            <div class="main-container">
+                <button class="back-button" onclick="window.location.href='index.html'">
+                    <div class="arrow-line"></div>
+                </button>
+                
+                <div class="loading" id="loadingText">Loading...</div>
+                <div id="detailContent" style="display: none;">
+                    <!-- 页面标题 -->
+                    <h1 class="page-title" id="pageTitle">Project Details</h1>
+                    
+                    <!-- 左侧文本框 -->
+                    <div class="text-box text-box-left">
+                        <div class="text-box-content" id="leftTextBox">
+                            This is the left text box content. It provides detailed information about the project and its key features.
+                        </div>
+                    </div>
+
+                    <!-- 右侧文本框 -->
+                    <div class="text-box text-box-right">
+                        <div class="text-box-content" id="rightTextBox">
+                            This is the right text box content. It contains additional details and technical specifications.
+                        </div>
+                    </div>
+
+                    <!-- 右侧图片和批注部分 -->
+                    <div class="image-annotation-section">
+                        <img class="annotation-image" id="annotationImage" src="work-source/WorksDescription/Card1/Card1Image.png" alt="Annotation Image">
+                        <div class="annotation-text" id="annotationText">
+                            This is a detailed annotation for the image above. It provides additional context and information about the visual elements shown in the image.
+                        </div>
+                    </div>
+
+                    <!-- 左侧画框部分 -->
+                    <div class="picture-frame">
+                        <img class="frame-image" id="frameImage" src="work-source/WorksDescription/Card1/Card1Image.png" alt="Frame Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取URL参数
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 跳转到index.html的指定位置
+        function goToIndexSection(scenePosition) {
+            // 计算缩放因子
+            const s = (window.innerWidth / 1536);
+            
+            // 将场景位置转换为浏览器滚动位置
+            const scrollPosition = scenePosition * s;
+            
+            // 跳转到index.html并滚动到指定位置
+            window.location.href = `index.html#scroll=${scrollPosition}`;
+        }
+
+        // 加载详情内容
+        function loadDetailContent() {
+            const cardTitle = getUrlParameter('title');
+            const cardId = getUrlParameter('id');
+            
+            if (!cardTitle && !cardId) {
+                document.getElementById('loadingText').textContent = 'No card information provided';
+                return;
+            }
+
+            // 显示加载状态
+            document.getElementById('loadingText').textContent = 'Loading card details...';
+
+            // 模拟加载详情内容
+            setTimeout(() => {
+                const title = cardTitle || `Card ${cardId || 'Unknown'}`;
+                
+                // 尝试加载对应的图片
+                const imagePath = `work-source/WorksDescription/Card${cardId || '1'}/Card${cardId || '1'}Image.png`;
+
+                // 更新批注图片
+                const annotationImage = document.getElementById('annotationImage');
+                annotationImage.src = imagePath;
+                annotationImage.onerror = function() {
+                    this.style.display = 'none';
+                };
+
+                // 更新画框图片
+                const frameImage = document.getElementById('frameImage');
+                frameImage.src = imagePath;
+                frameImage.onerror = function() {
+                    this.style.display = 'none';
+                };
+
+                // 更新批注文字
+                const annotationText = document.getElementById('annotationText');
+                annotationText.textContent = `This is a detailed annotation for ${title}. The image above showcases the key visual elements and design principles used in this project.`;
+
+                // 更新页面标题
+                const pageTitle = document.getElementById('pageTitle');
+                pageTitle.textContent = title;
+
+                // 更新文本框内容
+                const leftTextBox = document.getElementById('leftTextBox');
+                const rightTextBox = document.getElementById('rightTextBox');
+                leftTextBox.textContent = `Project Overview: ${title} represents a comprehensive approach to design and development. This section highlights the main objectives and creative vision behind the project.`;
+                rightTextBox.textContent = `Technical Details: The implementation of ${title} involves cutting-edge technologies and innovative design patterns. This section covers the technical aspects and development process.`;
+
+                // 隐藏加载状态，显示内容
+                document.getElementById('loadingText').style.display = 'none';
+                document.getElementById('detailContent').style.display = 'block';
+            }, 1000);
+        }
+
+        // 页面加载完成后执行
+        window.addEventListener('load', function() {
+            loadDetailContent();
+        });
+    </script>
+</body>
+</html>
