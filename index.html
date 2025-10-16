@@ -1169,7 +1169,7 @@
         <!-- 作品集卡片容器 -->
         <div class="carousel-container" id="carouselContainer">
         <!-- 作品集卡片 -->
-        <div class="portfolio-card" style="left: 118px;" onclick="goToDetail('Card1', 1)">
+        <div class="portfolio-card" style="left: 118px;" onclick="goToDetailWithId(1)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1191,7 +1191,7 @@
         </div>
         
         <!-- 第二个作品集卡片 -->
-        <div class="portfolio-card" style="left: 568px;" onclick="goToDetail('Card2', 2)">
+        <div class="portfolio-card" style="left: 568px;" onclick="goToDetailWithId(2)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1213,7 +1213,7 @@
         </div>
         
         <!-- 第三个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1018px;" onclick="goToDetail('Card3', 3)">
+        <div class="portfolio-card" style="left: 1018px;" onclick="goToDetailWithId(3)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1235,7 +1235,7 @@
         </div>
         
         <!-- 第四个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card4', 4)">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetailWithId(4)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1257,7 +1257,7 @@
         </div>
         
         <!-- 第五个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card5', 5)">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetailWithId(5)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1279,7 +1279,7 @@
         </div>
         
         <!-- 第六个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card6', 6)">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetailWithId(6)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1301,7 +1301,7 @@
         </div>
         
         <!-- 第七个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card7', 7)">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetailWithId(7)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1323,7 +1323,7 @@
         </div>
         
         <!-- 第八个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card8', 8)">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetailWithId(8)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1345,7 +1345,7 @@
         </div>
         
         <!-- 第九个作品集卡片 -->
-        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetail('Card9', 9)">
+        <div class="portfolio-card" style="left: 1618px;" onclick="goToDetailWithId(9)">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
@@ -1877,7 +1877,7 @@
         }
 
         // 开发者模式状态
-        let devModeEnabled = true;
+        let devModeEnabled = false;
 
         // 检查图片是否存在
         function checkImageExists(imagePath) {
@@ -2087,7 +2087,16 @@
             }, 500);
         }
 
-        // 跳转到详情页
+        // 跳转到详情页（新版本，只传递ID）
+        function goToDetailWithId(id) {
+            // 获取卡片的真实标题
+            const titleElement = document.getElementById(`workTitle${id}`);
+            const realTitle = titleElement ? titleElement.textContent : `Card${id}`;
+            const url = `detail.html?title=${encodeURIComponent(realTitle)}&id=${id}`;
+            window.location.href = url;
+        }
+
+        // 跳转到详情页（旧版本，保留兼容性）
         function goToDetail(title, id) {
             const url = `detail.html?title=${encodeURIComponent(title)}&id=${id}`;
             window.location.href = url;
