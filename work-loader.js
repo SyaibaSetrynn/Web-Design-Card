@@ -43,7 +43,13 @@ class WorkLoader {
     // 加载作品内容
     async loadWorkContent(cardNumber) {
         try {
+            console.log(`Loading work content for Card${cardNumber}...`);
             const imageElement = document.getElementById(`workImage${cardNumber}`);
+            
+            if (!imageElement) {
+                console.error(`Image element workImage${cardNumber} not found`);
+                return;
+            }
             
             // 先隐藏图片
             imageElement.style.display = 'none';
@@ -54,25 +60,45 @@ class WorkLoader {
             
             // 尝试加载图片
             const imagePath = `work-source/WorksDescription/Card${cardNumber}/Card${cardNumber}Image.png`;
+            console.log(`Checking image: ${imagePath}`);
             const imageExists = await this.checkImageExists(imagePath);
+            console.log(`Image exists: ${imageExists}`);
+            
             if (imageExists) {
                 imageElement.src = imagePath;
                 imageElement.style.display = 'block';
+                console.log(`Image loaded for Card${cardNumber}`);
+            } else {
+                console.warn(`Image not found for Card${cardNumber}: ${imagePath}`);
             }
 
             // 设置文本内容
-            document.getElementById(`workTitle${cardNumber}`).textContent = title;
-            document.getElementById(`workDescription${cardNumber}`).textContent = description;
+            const titleElement = document.getElementById(`workTitle${cardNumber}`);
+            const descElement = document.getElementById(`workDescription${cardNumber}`);
+            
+            if (titleElement) {
+                titleElement.textContent = title;
+                console.log(`Title set for Card${cardNumber}: ${title}`);
+            } else {
+                console.error(`Title element workTitle${cardNumber} not found`);
+            }
+            
+            if (descElement) {
+                descElement.textContent = description;
+                console.log(`Description set for Card${cardNumber}: ${description}`);
+            } else {
+                console.error(`Description element workDescription${cardNumber} not found`);
+            }
 
         } catch (error) {
-            console.error('Error loading work content:', error);
+            console.error(`Error loading work content for Card${cardNumber}:`, error);
             this.setDefaultContent(cardNumber);
         }
     }
 
     // 设置默认内容
     setDefaultContent(cardNumber) {
-        document.getElementById(`workTitle${cardNumber}`).textContent = 'No Description';
+        document.getElementById(`workTitle${cardNumber}`).textContent = `Card${cardNumber}`;
         document.getElementById(`workDescription${cardNumber}`).textContent = 'No Description';
     }
 

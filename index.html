@@ -15,7 +15,7 @@
         }
 
         html {
-            height: 1700px;
+            height: 1900px;
             overflow-y: auto; /* 只有html有滚动条 */
         }
 
@@ -102,6 +102,11 @@
             --primary-blue: #040570;
             --primary-white: #FFFFFF;
             --dark-blue: #0A083B;
+            
+            /* 章节位置偏移量 */
+            --who-am-i-offset: 1080px;
+            --my-works-offset: 1740px;
+            --contact-offset: 2600px;
             
             /* 动画时间轴 */
             --animation-delay-title: 0s;
@@ -476,7 +481,7 @@
 
         .center-divider {
             position: absolute;
-            top: 900px;
+            top: calc(var(--who-am-i-offset) - 80px);
             left: 50%;
             width: 2px;
             height: 500px;
@@ -490,7 +495,7 @@
 
         .horizontal-divider {
             position: absolute;
-            top: 1500px;
+            top: calc(var(--my-works-offset) - 40px);
             left: 10%;
             width: 80%;
             height: 2px;
@@ -503,7 +508,7 @@
 
         .my-works-title {
             position: absolute;
-            top: 1540px;
+            top: var(--my-works-offset);
             left: 50%;
             font-size: 80px;
             font-weight: bold;
@@ -514,7 +519,7 @@
 
         .who-am-i-title {
             position: absolute;
-            top: 980px;
+            top: var(--who-am-i-offset);
             left: 25%;
             font-size: 72px;
             font-weight: bold;
@@ -526,7 +531,7 @@
 
         .who-am-i-content {
             position: absolute;
-            top: 1000px;
+            top: calc(var(--who-am-i-offset) + 20px);
             left: 75%;
             font-size: 18px;
             font-weight: normal;
@@ -540,7 +545,7 @@
 
         .works-button {
             position: absolute;
-            top: 1180px;
+            top: calc(var(--who-am-i-offset) + 200px);
             left: 25%;
             transform: translateX(-50%);
             width: 190px;
@@ -603,13 +608,14 @@
         /* 作品集卡片容器 */
         .portfolio-card {
             position: absolute;
-            top: 1700px;
+            top: 0px; /* 在容器内，不需要额外的top偏移 */
             left: 100px;
             width: 400px;
             height: 500px;
             z-index: 100;
             cursor: pointer;
             overflow: hidden;
+            transition: left 0.5s ease-in-out;
         }
 
         /* 卡片hover效果 - 对角线渐变 */
@@ -862,6 +868,127 @@
             transform: translate(120px, -120px);
         }
 
+        /* 轮播容器样式 */
+        .carousel-container {
+            position: absolute;
+            top: calc(var(--my-works-offset) + 160px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1536px; /* 调整到1536px，让卡片从网页边缘消失 */
+            height: 500px;
+            overflow: hidden;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        /* 新的轮播按钮样式 */
+        .carousel-btn {
+            position: absolute;
+            top: 2140px; /* 背景上2140px位置 */
+            width: 60px; /* 半径30px，直径60px */
+            height: 60px; /* 半径30px，直径60px */
+            background: rgba(4, 5, 112, 0.7); /* 70%透明度的蓝色 */
+            border: 4px solid white; /* 白色边框，加宽100% */
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(4, 5, 112, 0.9);
+            transform: scale(1.1);
+        }
+
+        /* 左箭头 - 两条线直角 */
+        .carousel-btn-left::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 3px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(-5px) rotate(-45deg);
+            background: white;
+        }
+
+        .carousel-btn-left::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 3px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(5px) rotate(45deg);
+            background: white;
+        }
+
+        /* 右箭头 - 两条线直角 */
+        .carousel-btn-right::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 3px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(-5px) rotate(45deg);
+            background: white;
+        }
+
+        .carousel-btn-right::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 3px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(5px) rotate(-45deg);
+            background: white;
+        }
+
+        .carousel-btn-left {
+            left: 30px; /* left=30 */
+        }
+
+        .carousel-btn-right {
+            right: 30px; /* right=30，相当于left=width-90 */
+        }
+
+        /* 点指示器样式 */
+        .carousel-dots {
+            position: absolute;
+            top: 2450px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 50px;
+            z-index: 1000;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--primary-white);
+            transform: scale(2);
+        }
+
+        .dot:hover {
+            background: var(--primary-white);
+            transform: scale(1.5);
+        }
+
         @keyframes fadeInAndFloat {
             from {
                 opacity: 0;
@@ -976,9 +1103,9 @@
 
     <div id="page">
     <div class="top-bar">
-        <button class="nav-button">About me</button>
-        <button class="nav-button">My works</button>
-        <button class="nav-button">Contact</button>
+        <button class="nav-button" onclick="scrollToSection(400)">About me</button>
+        <button class="nav-button" onclick="scrollToSection(850)">My works</button>
+        <button class="nav-button" onclick="scrollToSection(1225)">Contact</button>
     </div>
 
     <div class="background-container">
@@ -1022,6 +1149,11 @@
         <div class="horizontal-divider"></div>
         
         <h1 class="my-works-title">My Works</h1>
+        
+        <!-- 轮播按钮 -->
+        <div class="carousel-btn carousel-btn-left" id="carouselPrev"></div>
+        <div class="carousel-btn carousel-btn-right" id="carouselNext"></div>
+        
         <h1 class="who-am-i-title">Who am I?</h1>
         <p class="who-am-i-content">I'm Setrynn Zhou, an undergraduate game designer.<br>
         Inspired by the games I played in my childhood, I developed a deep passion for creating interactive worlds.<br>
@@ -1029,20 +1161,22 @@
         Though those projects are complete, my journey in game design is far from over.<br>
         I'm still evolving—aiming for better technology, smarter design, and, most importantly, more fun.</p>
         
-        <div class="works-button">
+        <div class="works-button" onclick="scrollToSection(850)">
             <div class="works-button-fill"></div>
             <div class="works-button-text">See my works</div>
         </div>
         
+        <!-- 作品集卡片容器 -->
+        <div class="carousel-container" id="carouselContainer">
         <!-- 作品集卡片 -->
-        <div class="portfolio-card">
+        <div class="portfolio-card" style="left: 118px;">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
             <div class="card-right"></div>
             <div class="portfolio-frame"></div>
             <img class="work-image" id="workImage1" src="" alt="Work Preview" style="display: none;">
-            <h3 class="work-title" id="workTitle1">Loading...</h3>
+            <h3 class="work-title" id="workTitle1">Card1</h3>
             <p class="work-description" id="workDescription1">Loading...</p>
             <div class="arrow-group">
                 <div class="arrow-horizontal"></div>
@@ -1057,14 +1191,14 @@
         </div>
         
         <!-- 第二个作品集卡片 -->
-        <div class="portfolio-card" style="top: 1700px; left: 50%; transform: translateX(-50%);">
+        <div class="portfolio-card" style="left: 568px;">
             <div class="card-top"></div>
             <div class="card-bottom"></div>
             <div class="card-left"></div>
             <div class="card-right"></div>
             <div class="portfolio-frame"></div>
             <img class="work-image" id="workImage2" src="" alt="Work Preview" style="display: none;">
-            <h3 class="work-title" id="workTitle2">Loading...</h3>
+            <h3 class="work-title" id="workTitle2">Card2</h3>
             <p class="work-description" id="workDescription2">Loading...</p>
             <div class="arrow-group">
                 <div class="arrow-horizontal"></div>
@@ -1076,6 +1210,174 @@
                 <div class="arrow-vertical"></div>
                 <div class="arrow-long"></div>
             </div>
+        </div>
+        
+        <!-- 第三个作品集卡片 -->
+        <div class="portfolio-card" style="left: 1018px;">
+            <div class="card-top"></div>
+            <div class="card-bottom"></div>
+            <div class="card-left"></div>
+            <div class="card-right"></div>
+            <div class="portfolio-frame"></div>
+            <img class="work-image" id="workImage3" src="" alt="Work Preview" style="display: none;">
+            <h3 class="work-title" id="workTitle3">Card3</h3>
+            <p class="work-description" id="workDescription3">Loading...</p>
+            <div class="arrow-group">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+            <div class="arrow-group-2">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+        </div>
+        
+        <!-- 第四个作品集卡片 -->
+        <div class="portfolio-card" style="left: 1618px;">
+            <div class="card-top"></div>
+            <div class="card-bottom"></div>
+            <div class="card-left"></div>
+            <div class="card-right"></div>
+            <div class="portfolio-frame"></div>
+            <img class="work-image" id="workImage4" src="" alt="Work Preview" style="display: none;">
+            <h3 class="work-title" id="workTitle4">Card4</h3>
+            <p class="work-description" id="workDescription4">Loading...</p>
+            <div class="arrow-group">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+            <div class="arrow-group-2">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+        </div>
+        
+        <!-- 第五个作品集卡片 -->
+        <div class="portfolio-card" style="left: 1618px;">
+            <div class="card-top"></div>
+            <div class="card-bottom"></div>
+            <div class="card-left"></div>
+            <div class="card-right"></div>
+            <div class="portfolio-frame"></div>
+            <img class="work-image" id="workImage5" src="" alt="Work Preview" style="display: none;">
+            <h3 class="work-title" id="workTitle5">Card5</h3>
+            <p class="work-description" id="workDescription5">Loading...</p>
+            <div class="arrow-group">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+            <div class="arrow-group-2">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+        </div>
+        
+        <!-- 第六个作品集卡片 -->
+        <div class="portfolio-card" style="left: 1618px;">
+            <div class="card-top"></div>
+            <div class="card-bottom"></div>
+            <div class="card-left"></div>
+            <div class="card-right"></div>
+            <div class="portfolio-frame"></div>
+            <img class="work-image" id="workImage6" src="" alt="Work Preview" style="display: none;">
+            <h3 class="work-title" id="workTitle6">Card6</h3>
+            <p class="work-description" id="workDescription6">Loading...</p>
+            <div class="arrow-group">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+            <div class="arrow-group-2">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+        </div>
+        
+        <!-- 第七个作品集卡片 -->
+        <div class="portfolio-card" style="left: 1618px;">
+            <div class="card-top"></div>
+            <div class="card-bottom"></div>
+            <div class="card-left"></div>
+            <div class="card-right"></div>
+            <div class="portfolio-frame"></div>
+            <img class="work-image" id="workImage7" src="" alt="Work Preview" style="display: none;">
+            <h3 class="work-title" id="workTitle7">Card7</h3>
+            <p class="work-description" id="workDescription7">Loading...</p>
+            <div class="arrow-group">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+            <div class="arrow-group-2">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+        </div>
+        
+        <!-- 第八个作品集卡片 -->
+        <div class="portfolio-card" style="left: 1618px;">
+            <div class="card-top"></div>
+            <div class="card-bottom"></div>
+            <div class="card-left"></div>
+            <div class="card-right"></div>
+            <div class="portfolio-frame"></div>
+            <img class="work-image" id="workImage8" src="" alt="Work Preview" style="display: none;">
+            <h3 class="work-title" id="workTitle8">Card8</h3>
+            <p class="work-description" id="workDescription8">Loading...</p>
+            <div class="arrow-group">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+            <div class="arrow-group-2">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+        </div>
+        
+        <!-- 第九个作品集卡片 -->
+        <div class="portfolio-card" style="left: 1618px;">
+            <div class="card-top"></div>
+            <div class="card-bottom"></div>
+            <div class="card-left"></div>
+            <div class="card-right"></div>
+            <div class="portfolio-frame"></div>
+            <img class="work-image" id="workImage9" src="" alt="Work Preview" style="display: none;">
+            <h3 class="work-title" id="workTitle9">Card9</h3>
+            <p class="work-description" id="workDescription9">Loading...</p>
+            <div class="arrow-group">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+            <div class="arrow-group-2">
+                <div class="arrow-horizontal"></div>
+                <div class="arrow-vertical"></div>
+                <div class="arrow-long"></div>
+            </div>
+        </div>
+        </div>
+        
+        <!-- 点指示器 -->
+        <div class="carousel-dots">
+            <div class="dot active" onclick="jumpToCard(0)"></div>
+            <div class="dot active" onclick="jumpToCard(1)"></div>
+            <div class="dot active" onclick="jumpToCard(2)"></div>
+            <div class="dot" onclick="jumpToCard(3)"></div>
+            <div class="dot" onclick="jumpToCard(4)"></div>
+            <div class="dot" onclick="jumpToCard(5)"></div>
+            <div class="dot" onclick="jumpToCard(6)"></div>
+            <div class="dot" onclick="jumpToCard(7)"></div>
+            <div class="dot" onclick="jumpToCard(8)"></div>
         </div>
         
         <!-- 主页内容将在这里添加 -->
@@ -1104,6 +1406,8 @@
             const background = document.getElementById('background');
             if (background) {
                 background.style.transform = `translateY(${rate}px)`;
+                // 确保背景图片不会因为视差效果而完全移出视窗
+                background.style.backgroundPosition = `center ${Math.max(0, -rate)}px`;
             }
             
             // 应用阻尼效果到内容区域（除了顶边栏和开发者标线）
@@ -1269,6 +1573,8 @@
             const background = document.getElementById('background');
             if (background) {
                 background.style.transform = `translateY(${rate}px)`;
+                // 确保背景图片不会因为视差效果而完全移出视窗
+                background.style.backgroundPosition = `center ${Math.max(0, -rate)}px`;
             }
             
             // 应用阻尼效果到内容区域
@@ -1304,15 +1610,8 @@
             page.style.transform = `scale(${scaleFactor})`;
             page.style.width = '1536px';
             
-            // 计算并绘制分割线
-            drawBottomDivider();
-            
-            // 根据红色分割线位置设置页面总高度
-            const dividerY = 1700 + 500 + 100; // 2300
-            const contactY = dividerY + 40 + 80; // Contact文字底部位置
-            const contactContentY = contactY + 150; // Contact内容位置
-            const redDividerY = contactContentY + 100 + 200; // 红色分割线位置
-            const finalHeight = redDividerY + 2 + 100; // 红色分割线高度(2px) + 额外留100px空间
+            // 计算并绘制分割线，获取页面总高度
+            const finalHeight = drawBottomDivider();
             
             // 设置容器高度，由红色分割线位置决定
             const mainContainer = document.getElementById('mainContainer');
@@ -1323,14 +1622,21 @@
             // 不设置body高度，让CSS控制
             // document.body.style.height = finalHeight + 'px';
             
-            // 调整背景图片高度，使其与页面内容高度匹配
+            // 调整背景图片高度，使其能够覆盖整个页面加上视差移动距离
             const backgroundImage = document.getElementById('background');
+            let backgroundHeight = finalHeight; // 默认值
             if (backgroundImage) {
-                backgroundImage.style.height = finalHeight + 'px';
+                // 计算最大视差移动距离：当滚动到页面底部时的移动距离
+                const maxScrollY = finalHeight * scaleFactor;
+                const maxParallaxMove = (maxScrollY / scaleFactor) * 0.2; // 视差系数0.2
+                // 背景图片高度 = 页面高度 + 视差移动距离 + 额外缓冲
+                backgroundHeight = finalHeight + maxParallaxMove + 500;
+                backgroundImage.style.height = backgroundHeight + 'px';
+                console.log(`Background height set to ${backgroundHeight}px (page: ${finalHeight}px, parallax: ${maxParallaxMove}px)`);
             }
             
-            console.log(`Page height set to ${finalHeight}px, max scroll position ${maxScrollPosition}px, divider at ${dividerY}px`);
-            console.log(`Background height set to ${finalHeight}px`);
+            console.log(`Page height set to ${finalHeight}px, max scroll position ${maxScrollPosition}px`);
+            console.log(`Background height set to ${backgroundHeight}px`);
             console.log(`Custom scroll initialized`);
         }
         
@@ -1353,8 +1659,8 @@
             if (existingSetrynnText) existingSetrynnText.remove();
             if (existingRedDivider) existingRedDivider.remove();
             
-            // 计算分割线位置：卡片顶部(1700) + 卡片高度(500) + 间距(100) = 2300
-            const dividerY = 1700 + 500 + 100; // 2300
+            // 计算分割线位置：使用Contact offset变量
+            const dividerY = 2600; // 使用CSS变量 --contact-offset (已下移100px)
             
             // 创建分割线元素
             const divider = document.createElement('div');
@@ -1458,28 +1764,19 @@
                 contentContainer.appendChild(setrynnText);
             }
             
-            // 在图标下方200px添加红色分割线
-            const redDividerY = contactContentY + 100 + 200; // 图标底部 + 200px
+            // 红色分割线已删除
             
-            const redDivider = document.createElement('div');
-            redDivider.id = 'redDivider';
-            redDivider.style.position = 'absolute';
-            redDivider.style.top = redDividerY + 'px';
-            redDivider.style.left = '10%';
-            redDivider.style.width = '80%';
-            redDivider.style.height = '2px';
-            redDivider.style.background = 'red';
-            redDivider.style.zIndex = '1000';
-            redDivider.style.pointerEvents = 'none';
-            
-            if (contentContainer) {
-                contentContainer.appendChild(redDivider);
-            }
+            // 计算页面总高度
+            const iconBottomY = contactContentY + 100; // 图标底部位置
+            const finalHeight = iconBottomY + 200; // 图标下方留200px空间
             
             console.log(`Bottom divider drawn at fixed y=${dividerY}`);
             console.log(`Contact text added at y=${dividerY + 40}`);
             console.log(`Contact content added at y=${contactContentY}`);
-            console.log(`Red divider added at y=${redDividerY}`);
+            console.log(`Page height set to ${finalHeight}px`);
+            
+            // 返回页面总高度
+            return finalHeight;
         }
 
         // 自适应标题字体大小
@@ -1509,11 +1806,24 @@
             initCustomScroll();
             // 加载作品内容
             if (window.workLoader) {
+                console.log('Starting to load work content...');
                 window.workLoader.loadWorkContent(1);
                 window.workLoader.loadWorkContent(2);
+                window.workLoader.loadWorkContent(3);
+                window.workLoader.loadWorkContent(4);
+                window.workLoader.loadWorkContent(5);
+                window.workLoader.loadWorkContent(6);
+                window.workLoader.loadWorkContent(7);
+                window.workLoader.loadWorkContent(8);
+                window.workLoader.loadWorkContent(9);
                 // 内容加载完成后调整字体大小
                 setTimeout(adjustTitleFontSize, 100);
+            } else {
+                console.error('workLoader not available');
             }
+            
+            // 初始化轮播
+            initCarousel();
         });
         
         // 窗口大小改变时重新缩放
@@ -1619,6 +1929,185 @@
                 toggleDevMode();
             }
         });
+
+        // 滚动到指定位置的函数
+        function scrollToSection(scenePosition) {
+            // 计算缩放因子
+            const s = (window.innerWidth / 1536);
+            
+            // 将场景位置转换为浏览器滚动位置
+            // 由于页面有缩放，需要乘以缩放因子
+            const scrollPosition = scenePosition * s;
+            
+            window.scrollTo({
+                top: scrollPosition,
+                behavior: 'smooth'
+            });
+        }
+
+        // 轮播功能
+        let currentPhase = 0;
+        const totalCards = 9;
+        const cardsPerView = 3;
+        
+        // 展示位置定义
+        const displayPositions = [
+            -482,  // 位置0（屏幕外左侧）-507+25
+            118,   // 位置1 93+25
+            568,   // 位置2 543+25
+            1018,  // 位置3 993+25
+            1618   // 位置4（屏幕外右侧）1593+25
+        ];
+
+        function moveCarousel(direction) {
+            console.log(`moveCarousel: direction=${direction}, currentPhase=${currentPhase}`);
+            
+            // 正确的逻辑：direction=1向右移动（增加阶段），direction=-1向左移动（减少阶段）
+            const newPhase = currentPhase + direction; // 修正：应该是加法
+            
+            console.log(`newPhase=${newPhase}, bounds=[0, ${totalCards - cardsPerView}]`);
+            
+            // 检查边界
+            if (newPhase < 0 || newPhase > totalCards - cardsPerView) {
+                console.log('Boundary check failed, returning');
+                return;
+            }
+            
+            currentPhase = newPhase;
+            console.log(`Phase updated to: ${currentPhase}`);
+            updateCarousel();
+            updateNavigationButtons();
+            updateDots();
+        }
+
+        function jumpToCard(index) {
+            currentPhase = index;
+            updateCarousel();
+            updateNavigationButtons();
+            updateDots();
+        }
+
+        function updateCarousel() {
+            console.log(`updateCarousel called with currentPhase: ${currentPhase}`);
+            
+            // 独立调节每张卡片的位置
+            const cards = document.querySelectorAll('.portfolio-card');
+            
+            cards.forEach((card, cardIndex) => {
+                // 计算卡片应该在哪条展示位
+                // 调整逻辑：Card1应该在位置1，所以需要+1
+                let displayPosition = cardIndex - currentPhase + 1;
+                
+                // 边界处理：大于4的设为4，小于0的设为0
+                if (displayPosition > 4) displayPosition = 4;
+                if (displayPosition < 0) displayPosition = 0;
+                
+                // 获取对应的位置坐标
+                const leftPosition = displayPositions[displayPosition];
+                
+                // 设置卡片位置
+                card.style.left = leftPosition + 'px';
+                
+                console.log(`Card${cardIndex + 1}: displayPosition=${displayPosition}, left=${leftPosition}px`);
+            });
+            
+            console.log('updateCarousel completed');
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('carouselPrev');
+            const nextBtn = document.getElementById('carouselNext');
+            
+            // 检查按钮是否存在
+            if (!prevBtn || !nextBtn) {
+                console.log('Buttons not found:', { prevBtn, nextBtn });
+                return;
+            }
+            
+            // 更新左按钮状态（向左移动，显示前面的卡片）
+            if (currentPhase <= 0) {
+                prevBtn.style.opacity = '0.3';
+                prevBtn.style.cursor = 'not-allowed';
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.style.opacity = '1';
+                prevBtn.style.cursor = 'pointer';
+                prevBtn.disabled = false;
+            }
+            
+            // 更新右按钮状态（向右移动，显示后面的卡片）
+            if (currentPhase >= totalCards - cardsPerView) {
+                nextBtn.style.opacity = '0.3';
+                nextBtn.style.cursor = 'not-allowed';
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.style.opacity = '1';
+                nextBtn.style.cursor = 'pointer';
+                nextBtn.disabled = false;
+            }
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                if (index >= currentPhase && index < currentPhase + cardsPerView) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // 测试函数：在屏幕中心闪烁红点
+        function showRedDot() {
+            // 创建红点元素
+            const redDot = document.createElement('div');
+            redDot.style.position = 'fixed';
+            redDot.style.top = '50%';
+            redDot.style.left = '50%';
+            redDot.style.transform = 'translate(-50%, -50%)';
+            redDot.style.width = '20px';
+            redDot.style.height = '20px';
+            redDot.style.backgroundColor = 'red';
+            redDot.style.borderRadius = '50%';
+            redDot.style.zIndex = '9999';
+            redDot.style.pointerEvents = 'none';
+            
+            // 添加到页面
+            document.body.appendChild(redDot);
+            
+            // 500ms后移除
+            setTimeout(() => {
+                if (redDot.parentNode) {
+                    redDot.parentNode.removeChild(redDot);
+                }
+            }, 500);
+        }
+
+        // 初始化轮播
+        function initCarousel() {
+            // 设置初始卡片位置
+            updateCarousel();
+            
+            // 添加按键事件监听器
+            const prevBtn = document.getElementById('carouselPrev');
+            const nextBtn = document.getElementById('carouselNext');
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    if (!prevBtn.disabled) moveCarousel(-1);
+                });
+            }
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    if (!nextBtn.disabled) moveCarousel(1);
+                });
+            }
+            
+            updateNavigationButtons();
+            updateDots();
+        }
     </script>
     </div>
 </body>
